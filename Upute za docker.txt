@@ -1,0 +1,57 @@
+------------------------------------------------------------
+Stvaranje Docker containera:
+------------------------------------------------------------
+1. docker run --gpus all --name=<username> -d -it -p <port_number>6000>:22 -v  /home/<username>:/workspace nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04
+
+Sada ste stvorili container koji se zove <username> i <home folder na računalu> je povezan na folder /workspace u containeru. 
+Sve što se radi u home folderu vidi se live i tamo.
+
+Ovdje se koristi image nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04, ali može se koristiti i neki drugi image, ovisno o konkretnim potrebama korisnika.
+
+2. Za 'ulazak' u container treba pokrenuti sljedeće:
+	
+docker exec -it <username> bash
+
+Sada se nalazimo u komandnoj liniji containera i tamo možemo instalirati nove stvari npr. anacondu (preporučljivo), brisati, raditi update...
+To su dvije najbitnije naredbe. 
+
+
+---------------------
+1. Unutar containera izvršiti:
+apt update && apt install -y openssh-server
+mkdir /var/run/sshd
+
+####### VAŽNO! u ovom koraku zamjeniti <passwd> s proizvoljnom lozinkom (nije ista kao lozinka za povezivanje na server)
+echo 'root:<passwd>' | chpasswd
+
+sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+echo "export VISIBLE=now" >> /etc/profile
+service ssh restart
+
+3. Ako na svom računalu koristite Pycharm:
+
+U Pycharmu napraviti sljedeće:
+File -> Settings -> Project -> Project Interpreter
+
+Kliknuti na settings ikonicu -> Add -> SSH Interpreter
+
+Unijeti podatke:
+Host: IP od servera
+Port: <port_number>6000>
+Username: root
+-> Next
+
+U idućem koraku unijeti password in koraka 1:
+-> Next
+
+U zadnjem koraku postaviti mapiranje fajlova. Ovime se specificira gdje će se u container kopirati sadržaj lokalnog direktorija (Project root-a).
+
+########
+Domensko ime: zver1.zesoi.fer.hr
+IP adresa: 161.53.64.237
+Port: 443/5555
+
+########
+Infornacije o GPU (izvesti na serveru, ne containeru): nvidia-smi
+Informacije o procesima na serveru: ps -eo pid,lstart,cmd
