@@ -19,6 +19,38 @@ def create_results_dir_and_results_predict_dir(root_dir):
     return results_dir + '/'
 
 
+def load_and_preprocess_evaluation_images_and_masks(evaluation_path, image_folder, mask_folder):
+    print("# loading and preprocessing evaluation images and masks")
+    evaluation_image_paths = os.listdir(evaluation_path + '/' + image_folder)
+    evaluation_mask_paths = os.listdir(evaluation_path + '/' + mask_folder)
+    if len(evaluation_image_paths) != len(evaluation_mask_paths):
+        raise Exception
+
+    images = []
+    masks = []
+    for name in evaluation_image_paths:
+        image = cv2.imread(evaluation_path + '/' + image_folder + '/' + name, cv2.IMREAD_GRAYSCALE).reshape((1024, 512, 1))
+        mask = cv2.imread(evaluation_path + '/' + mask_folder + '/' + name, cv2.IMREAD_GRAYSCALE)
+
+        # TODO resize
+        output_mask = np.zeros((1024, 512, 4))
+        for x, y in np.ndindex(mask.shape):
+            value = mask[x][y]
+            if value == 0:
+                output_mask[x][y][0] = 1
+            elif value == 45:
+                output_mask[x][y][1] = 1
+            elif value == 125:
+                output_mask[x][y][2] = 1
+            elif value == 205:
+                output_mask[x][y][3] = 1
+            else:
+                raise Exception
+        images.append(image)
+        masks.append(output_mask)
+    return np.array(images), np.array(masks)
+
+
 def load_and_preprocess_train_images(train_path, image_folder, mask_folder):
     print("# loading and preprocessing images")
     train_image_paths = os.listdir(train_path + '/' + image_folder)
