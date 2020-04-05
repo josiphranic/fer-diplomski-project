@@ -17,7 +17,7 @@ model = custom_unet((1024, 512, 1), num_classes=4, output_activation='softmax')
 model.compile(optimizer = 'adam', loss = jaccard_distance, metrics = ['accuracy'])
 
 model_checkpoint = ModelCheckpoint(results_dir + 'unet_jaccard_3.hdf5', monitor='loss',verbose=1, save_best_only=True)
-model.fit_generator(myGene,steps_per_epoch=SPE,epochs=1,callbacks=[model_checkpoint])
+model.fit_generator(myGene,steps_per_epoch=SPE,epochs=30,callbacks=[model_checkpoint])
 
 testGene = testGenerator(root_dir + "test")
 results = model.predict_generator(testGene,1,verbose=1)
