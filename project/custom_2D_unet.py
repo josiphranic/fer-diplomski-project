@@ -77,4 +77,3 @@ def custom_unet(
 
     model = Model(inputs=[inputs], outputs=[outputs])
     return model
-
