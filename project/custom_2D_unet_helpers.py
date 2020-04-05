@@ -1,7 +1,7 @@
 import os
 import cv2
 import numpy as np
-from keras import backend as K
+from tensorflow.keras import backend as K
 
 
 def jaccard_distance(y_true, y_pred, smooth=100):
@@ -83,5 +83,5 @@ def saveResult(save_path, npyfile):
                     output[x][y] = 205
                 else:
                     raise Exception
-        np.savetxt(save_path + str(i) + '_predict_3.csv', output, delimiter=",")
+        #np.savetxt(save_path + str(i) + '_predict_3.csv', output, delimiter=",")
         cv2.imwrite(save_path + str(i) + '_predict_3.png', output)

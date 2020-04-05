@@ -2,7 +2,7 @@ from custom_2D_unet import *
 from custom_2D_unet_helpers import *
 from helpers import *
 from math import ceil
-from keras.callbacks import ModelCheckpoint
+from tensorflow.keras.callbacks import ModelCheckpoint
 
 
 root_dir = '/workspace/datasets/kbc_sm/'
