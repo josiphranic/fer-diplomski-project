@@ -13,7 +13,7 @@ model.summary()
 
 results_dir = create_results_dir_and_results_predict_dir('/workspace/results/kbc_sm/')
 model_checkpoint = ModelCheckpoint(results_dir + 'unet_jaccard_3.hdf5', monitor='loss', verbose=1, save_best_only=True)
-model.fit(train_images, train_masks, epochs=1000, callbacks=[model_checkpoint])
+model.fit(train_images, train_masks, batch_size=3, epochs=1000, callbacks=[model_checkpoint])
 
 # TODO evaluation
 test_images = load_and_preprocess_test_images(root_dir + "test")

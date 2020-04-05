@@ -31,7 +31,7 @@ def load_and_preprocess_train_images(train_path, image_folder, mask_folder):
     counter = 0
     for name in train_image_paths:
         print('counter:' + str(counter))
-        if counter > 1:
+        if counter > 10:
             break
         counter = counter + 1
         image = cv2.imread(train_path + '/' + image_folder + '/' + name, cv2.IMREAD_GRAYSCALE).reshape((1024, 512, 1))
