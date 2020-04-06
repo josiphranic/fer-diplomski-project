@@ -25,7 +25,7 @@ def create_results_dir_results_predict_dir_and_logs_dir(root_dir):
 
 
 def load_and_preprocess_evaluation_images_and_masks(evaluation_path, image_folder, mask_folder):
-    print("# loading and preprocessing evaluation images and masks")
+    print("\n# loading and preprocessing evaluation images and masks")
     evaluation_image_paths = os.listdir(evaluation_path + '/' + image_folder)
     evaluation_mask_paths = os.listdir(evaluation_path + '/' + mask_folder)
     if len(evaluation_image_paths) != len(evaluation_mask_paths):
@@ -33,7 +33,8 @@ def load_and_preprocess_evaluation_images_and_masks(evaluation_path, image_folde
 
     images = []
     masks = []
-    for name in evaluation_image_paths:
+    for i, name in enumerate(evaluation_image_paths):
+        update_progress((i / len(evaluation_image_paths)) * 100)
         image = cv2.imread(evaluation_path + '/' + image_folder + '/' + name, cv2.IMREAD_GRAYSCALE).reshape((1024, 512, 1))
         mask = cv2.imread(evaluation_path + '/' + mask_folder + '/' + name, cv2.IMREAD_GRAYSCALE)
 
@@ -57,7 +58,7 @@ def load_and_preprocess_evaluation_images_and_masks(evaluation_path, image_folde
 
 
 def load_and_preprocess_train_images_and_masks(train_path, image_folder, mask_folder, count=None):
-    print("# loading and preprocessing images")
+    print("\n# loading and preprocessing train images and masks")
     train_image_paths = os.listdir(train_path + '/' + image_folder)
     train_mask_paths = os.listdir(train_path + '/' + mask_folder)
     if count is not None:
@@ -68,7 +69,8 @@ def load_and_preprocess_train_images_and_masks(train_path, image_folder, mask_fo
 
     images = []
     masks = []
-    for name in train_image_paths:
+    for i, name in enumerate(train_image_paths):
+        update_progress((i / len(train_image_paths)) * 100)
         image = cv2.imread(train_path + '/' + image_folder + '/' + name, cv2.IMREAD_GRAYSCALE).reshape((1024, 512, 1))
         mask = cv2.imread(train_path + '/' + mask_folder + '/' + name, cv2.IMREAD_GRAYSCALE)
 
@@ -93,7 +95,7 @@ def load_and_preprocess_train_images_and_masks(train_path, image_folder, mask_fo
 
 
 def load_and_preprocess_test_images(test_path):
-    print("# loading and preprocessing test images")
+    print("\n# loading and preprocessing test images")
     images = []
     for test_image_name in os.listdir(test_path):
         image = cv2.imread(test_path + '/' + test_image_name, cv2.IMREAD_GRAYSCALE).reshape((1024, 512, 1))
@@ -103,7 +105,7 @@ def load_and_preprocess_test_images(test_path):
 
 
 def convert_results_to_gray_images_and_save(predicted_path, result_masks):
-    print("# converting result masks to gray images and saving")
+    print("\n# converting result masks to gray images and saving")
     for i, item in enumerate(result_masks):
         output = np.zeros((1024, 512))
         for x in range(0, item.shape[0]):
@@ -120,3 +122,7 @@ def convert_results_to_gray_images_and_save(predicted_path, result_masks):
                 else:
                     raise Exception
         cv2.imwrite(predicted_path + str(i) + '_predict_3.png', output)
+
+
+def update_progress(progress_percentage):
+    print('\r# {0}%'.format(round(progress_percentage, 2)), end='')
