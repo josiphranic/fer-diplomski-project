@@ -6,3 +6,4 @@
 -make model topology image
 -traning,loading elapsed time
 -translation for readme
+-evaluation (and load) for saved models
