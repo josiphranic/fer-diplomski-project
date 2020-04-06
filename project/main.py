@@ -15,7 +15,7 @@ model.summary()
 results_dir = create_results_dir_results_predict_dir_and_logs_dir('/workspace/results/kbc_sm/')
 model_checkpoint = ModelCheckpoint(results_dir + 'unet_jaccard_3.hdf5', monitor='loss', verbose=1, save_best_only=True)
 tensorboard = TensorBoard(results_dir + 'logs/', histogram_freq=1)
-model.fit(train_images, train_masks, batch_size=3, epochs=30, callbacks=[model_checkpoint, tensorboard])
+model.fit(train_images, train_masks, batch_size=3, epochs=50, callbacks=[model_checkpoint, tensorboard])
 
 evaluation_loss, evaluation_accuracy = model.evaluate(evaluation_images, evaluation_masks)
 print('Evaluation loss:' + str(evaluation_loss) + ' accuracy:' + str(evaluation_accuracy))
