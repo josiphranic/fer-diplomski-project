@@ -1,0 +1,6 @@
+-optimize memory when loading data
+-resize all data to single format(shape)
+-split helper methods for creatinon dirs
+-refactor method for converting to grayscale and backward and optimize (using gpu ?)
+-try to normalize input date and see results (possibly depends on BatchNormalization)
+-make model topology image
