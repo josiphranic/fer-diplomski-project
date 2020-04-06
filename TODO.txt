@@ -7,3 +7,4 @@
 -traning,loading elapsed time
 -translation for readme
 -evaluation (and load) for saved models
+-short description of model for results file (traing time, accuracy, loss, model...)
