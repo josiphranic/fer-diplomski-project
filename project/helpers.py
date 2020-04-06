@@ -121,8 +121,62 @@ def convert_results_to_gray_images_and_save(predicted_path, result_masks):
                     output[x][y] = 205
                 else:
                     raise Exception
-        cv2.imwrite(predicted_path + str(i) + '_predict_3.png', output)
+        cv2.imwrite(predicted_path + str(i) + '_predict.png', output)
+
+
+def convert_results_to_gray_images(result_masks):
+    print("\n# converting result masks to gray images")
+    converted = []
+    for i, item in enumerate(result_masks):
+        update_progress((i / len(result_masks)) * 100)
+        output = np.zeros((1024, 512))
+        for x in range(0, item.shape[0]):
+            for y in range(0, item.shape[1]):
+                value = np.argmax(item[x][y])
+                if value == 0:
+                    output[x][y] = 0
+                elif value == 1:
+                    output[x][y] = 45
+                elif value == 2:
+                    output[x][y] = 125
+                elif value == 3:
+                    output[x][y] = 205
+                else:
+                    raise Exception
+        converted.append(output)
+    return converted
 
 
 def update_progress(progress_percentage):
     print('\r# {0}%'.format(round(progress_percentage, 2)), end='')
+
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+def show_images(images, cols=1, titles=None):
+    """Display a list of images in a single figure with matplotlib.
+
+    Parameters
+    ---------
+    images: List of np.arrays compatible with plt.imshow.
+
+    cols (Default = 1): Number of columns in figure (number of rows is
+                        set to np.ceil(n_images/float(cols))).
+
+    titles: List of titles corresponding to each image. Must have
+            the same length as titles.
+    """
+    assert ((titles is None) or (len(images) == len(titles)))
+    n_images = len(images)
+    if titles is None: titles = ['Image (%d)' % i for i in range(1, n_images + 1)]
+    fig = plt.figure()
+    for n, (image, title) in enumerate(zip(images, titles)):
+        a = fig.add_subplot(cols, np.ceil(n_images / float(cols)), n + 1)
+        if image.ndim == 2:
+            plt.gray()
+        plt.imshow(image)
+        a.set_title(title)
+    fig.set_size_inches(np.array(fig.get_size_inches()) * n_images)
+    plt.show()
