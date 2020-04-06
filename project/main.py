@@ -14,7 +14,7 @@ model.summary()
 
 results_dir = create_results_dir_and_results_predict_dir('/workspace/results/kbc_sm/')
 model_checkpoint = ModelCheckpoint(results_dir + 'unet_jaccard_3.hdf5', monitor='loss', verbose=1, save_best_only=True)
-model.fit(train_images, train_masks, batch_size=3, epochs=100, callbacks=[model_checkpoint])
+model.fit(train_images, train_masks, batch_size=3, epochs=30, callbacks=[model_checkpoint])
 
 evaluation_loss, evaluation_accuracy = model.evaluate(evaluation_images, evaluation_masks)
 print('Evaluation loss:' + evaluation_loss + ' accuracy:' + evaluation_accuracy)
