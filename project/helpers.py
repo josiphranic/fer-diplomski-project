@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 
 
-def create_results_dir_and_results_predict_dir(root_dir):
+def create_results_dir_results_predict_dir_and_logs_dir(root_dir):
     results_dir = root_dir + 'results/' + str(datetime.datetime.now()).replace(' ', '_')
     if not os.path.exists(results_dir):
         oldmask = os.umask(000)
@@ -14,6 +14,11 @@ def create_results_dir_and_results_predict_dir(root_dir):
     if not os.path.exists(results_dir_predict):
         oldmask = os.umask(000)
         os.makedirs(results_dir_predict, 0o777)
+        os.umask(oldmask)
+    results_dir_logs = results_dir + '/' + 'logs'
+    if not os.path.exists(results_dir_logs):
+        oldmask = os.umask(000)
+        os.makedirs(results_dir_logs, 0o777)
         os.umask(oldmask)
 
     return results_dir + '/'
@@ -51,10 +56,13 @@ def load_and_preprocess_evaluation_images_and_masks(evaluation_path, image_folde
     return np.array(images), np.array(masks)
 
 
-def load_and_preprocess_train_images(train_path, image_folder, mask_folder):
+def load_and_preprocess_train_images_and_masks(train_path, image_folder, mask_folder, count=None):
     print("# loading and preprocessing images")
     train_image_paths = os.listdir(train_path + '/' + image_folder)
     train_mask_paths = os.listdir(train_path + '/' + mask_folder)
+    if count is not None:
+        train_image_paths = train_image_paths[:count]
+        train_mask_paths = train_mask_paths[:count]
     if len(train_image_paths) != len(train_mask_paths):
         raise Exception
 
