@@ -17,7 +17,7 @@ model.summary()
 results_dir = create_results_dir_results_predict_dir_and_logs_dir(results_root_dir)
 model_checkpoint = ModelCheckpoint(results_dir + 'unet_jaccard.hdf5', monitor='loss', verbose=1, save_best_only=True)
 tensorboard = TensorBoard(results_dir + 'tensorboardlogs/', histogram_freq=1)
-model.fit(train_images, train_masks, batch_size=4, epochs=30, callbacks=[model_checkpoint, tensorboard], validation_split=0.1, shuffle=True)
+model.fit(train_images, train_masks, batch_size=3, epochs=40, callbacks=[model_checkpoint, tensorboard], validation_split=0.1, shuffle=True)
 
 print('Evaluation:')
 evaluation_loss, evaluation_accuracy = model.evaluate(test_images, test_masks)
