@@ -10,12 +10,27 @@ def create_results_dir_results_predict_dir_and_logs_dir(root_dir):
         oldmask = os.umask(000)
         os.makedirs(results_dir, 0o777)
         os.umask(oldmask)
-    results_dir_predict = results_dir + '/' + 'predict'
+    results_dir_predict = results_dir + '/' + 'predictions'
     if not os.path.exists(results_dir_predict):
         oldmask = os.umask(000)
         os.makedirs(results_dir_predict, 0o777)
         os.umask(oldmask)
-    results_dir_logs = results_dir + '/' + 'logs'
+    results_dir_predict_image = results_dir + '/' + 'predictions/images'
+    if not os.path.exists(results_dir_predict_image):
+        oldmask = os.umask(000)
+        os.makedirs(results_dir_predict_image, 0o777)
+        os.umask(oldmask)
+    results_dir_predict_mask = results_dir + '/' + 'predictions/masks'
+    if not os.path.exists(results_dir_predict_mask):
+        oldmask = os.umask(000)
+        os.makedirs(results_dir_predict_mask, 0o777)
+        os.umask(oldmask)
+    results_dir_predict_results = results_dir + '/' + 'predictions/results'
+    if not os.path.exists(results_dir_predict_results):
+        oldmask = os.umask(000)
+        os.makedirs(results_dir_predict_results, 0o777)
+        os.umask(oldmask)
+    results_dir_logs = results_dir + '/' + 'tensorboardlogs'
     if not os.path.exists(results_dir_logs):
         oldmask = os.umask(000)
         os.makedirs(results_dir_logs, 0o777)
@@ -24,7 +39,7 @@ def create_results_dir_results_predict_dir_and_logs_dir(root_dir):
     return results_dir + '/'
 
 
-def load_and_preprocess_evaluation_images_and_masks(evaluation_path, image_folder, mask_folder):
+def load_and_preprocess_test_images_and_masks(evaluation_path, image_folder, mask_folder):
     print("\n# loading and preprocessing evaluation images and masks")
     evaluation_image_paths = os.listdir(evaluation_path + '/' + image_folder)
     evaluation_mask_paths = os.listdir(evaluation_path + '/' + mask_folder)
@@ -104,7 +119,7 @@ def load_and_preprocess_test_images(test_path):
     return np.array(images)
 
 
-def convert_results_to_gray_images_and_save(predicted_path, result_masks):
+def convert_masks_to_gray_images_and_save(predicted_path, result_masks):
     print("\n# converting result masks to gray images and saving")
     for i, item in enumerate(result_masks):
         output = np.zeros((1024, 512))
@@ -121,7 +136,7 @@ def convert_results_to_gray_images_and_save(predicted_path, result_masks):
                     output[x][y] = 205
                 else:
                     raise Exception
-        cv2.imwrite(predicted_path + str(i) + '_predict.png', output)
+        cv2.imwrite(predicted_path + str(i) + '_mask.png', output)
 
 
 def convert_results_to_gray_images(result_masks):
@@ -145,6 +160,19 @@ def convert_results_to_gray_images(result_masks):
                     raise Exception
         converted.append(output)
     return converted
+
+
+def convert_images_to_gray_images_and_save(save_path, images):
+    print("\n# converting images to gray images and saving")
+    for i, image in enumerate(images):
+        grayscale_image = image.reshape((1024, 512))
+        cv2.imwrite(save_path + str(i) + '_image.png', grayscale_image)
+
+
+def make_file_and_write(file_path, text):
+    file = open(file_path, "w")
+    file.write(text)
+    file.close()
 
 
 def update_progress(progress_percentage):
