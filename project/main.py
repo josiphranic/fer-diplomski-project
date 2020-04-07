@@ -10,13 +10,13 @@ train_images, train_masks = load_and_preprocess_train_images_and_masks(dataset_r
 evaluation_images, evaluation_masks = load_and_preprocess_evaluation_images_and_masks(dataset_root_dir + 'evaluation', 'image', 'label')
 
 model = custom_unet((1024, 512, 1), num_classes=4, use_batch_norm=True, output_activation='softmax')
-model.compile(optimizer='adam', loss=jaccard_distance, metrics=['accuracy'])
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 model.summary()
 
 results_dir = create_results_dir_results_predict_dir_and_logs_dir(results_root_dir)
-model_checkpoint = ModelCheckpoint(results_dir + 'unet_jaccard.hdf5', monitor='loss', verbose=1, save_best_only=True)
+model_checkpoint = ModelCheckpoint(results_dir + 'unet_categorical_crossentropy.hdf5', monitor='loss', verbose=1, save_best_only=True)
 tensorboard = TensorBoard(results_dir + 'logs/', histogram_freq=1, write_images=True)
-model.fit(train_images, train_masks, batch_size=5, epochs=50, callbacks=[model_checkpoint, tensorboard])
+model.fit(train_images, train_masks, batch_size=5, epochs=30, callbacks=[model_checkpoint, tensorboard])
 
 evaluation_loss, evaluation_accuracy = model.evaluate(evaluation_images, evaluation_masks)
 print('Evaluation loss:' + str(evaluation_loss) + ' accuracy:' + str(evaluation_accuracy))
