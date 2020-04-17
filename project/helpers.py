@@ -1,6 +1,7 @@
 import datetime
 import os
 import cv2
+import matplotlib.pyplot as plt
 import numpy as np
 
 
@@ -39,8 +40,8 @@ def create_results_dir_results_predict_dir_and_logs_dir(root_dir):
     return results_dir + '/'
 
 
-def load_and_preprocess_test_images_and_masks(evaluation_path, image_folder, mask_folder):
-    print("\n# loading and preprocessing evaluation images and masks")
+def load_and_preprocess_test_images_and_masks(evaluation_path, image_folder, mask_folder, mask_pixel_values_aka_classes, shape=(512, 256)):
+    print("\n# loading and preprocessing test images and masks")
     evaluation_image_paths = os.listdir(evaluation_path + '/' + image_folder)
     evaluation_mask_paths = os.listdir(evaluation_path + '/' + mask_folder)
     if len(evaluation_image_paths) != len(evaluation_mask_paths):
@@ -49,30 +50,19 @@ def load_and_preprocess_test_images_and_masks(evaluation_path, image_folder, mas
     images = []
     masks = []
     for i, name in enumerate(evaluation_image_paths):
-        update_progress((i / len(evaluation_image_paths)) * 100)
-        image = cv2.imread(evaluation_path + '/' + image_folder + '/' + name, cv2.IMREAD_GRAYSCALE).reshape((1024, 512, 1))
+        update_progress(((i+1) / len(evaluation_image_paths)) * 100)
+        image = cv2.imread(evaluation_path + '/' + image_folder + '/' + name, cv2.IMREAD_GRAYSCALE)
+        image = resize_image(image, shape)
+        image = image.reshape((shape[0], shape[1], 1))
         mask = cv2.imread(evaluation_path + '/' + mask_folder + '/' + name, cv2.IMREAD_GRAYSCALE)
-
-        # TODO resize
-        output_mask = np.zeros((1024, 512, 4))
-        for x, y in np.ndindex(mask.shape):
-            value = mask[x][y]
-            if value == 0:
-                output_mask[x][y][0] = 1
-            elif value == 45:
-                output_mask[x][y][1] = 1
-            elif value == 125:
-                output_mask[x][y][2] = 1
-            elif value == 205:
-                output_mask[x][y][3] = 1
-            else:
-                raise Exception
+        mask = resize_image(mask, shape)
+        mask = convert_pixel_mask_to_multiclass_matirx_mask(mask, mask_pixel_values_aka_classes)
         images.append(image)
-        masks.append(output_mask)
+        masks.append(mask)
     return np.array(images), np.array(masks)
 
 
-def load_and_preprocess_train_images_and_masks(train_path, image_folder, mask_folder, count=None):
+def load_and_preprocess_train_images_and_masks(train_path, image_folder, mask_folder, mask_pixel_values_aka_classes, count=None, shape=(512, 256)):
     print("\n# loading and preprocessing train images and masks")
     train_image_paths = os.listdir(train_path + '/' + image_folder)
     train_mask_paths = os.listdir(train_path + '/' + mask_folder)
@@ -85,88 +75,55 @@ def load_and_preprocess_train_images_and_masks(train_path, image_folder, mask_fo
     images = []
     masks = []
     for i, name in enumerate(train_image_paths):
-        update_progress((i / len(train_image_paths)) * 100)
-        image = cv2.imread(train_path + '/' + image_folder + '/' + name, cv2.IMREAD_GRAYSCALE).reshape((1024, 512, 1))
+        update_progress(((i+1) / len(train_image_paths)) * 100)
+        image = cv2.imread(train_path + '/' + image_folder + '/' + name, cv2.IMREAD_GRAYSCALE)
+        image = resize_image(image, shape)
+        image = image.reshape((shape[0], shape[1], 1))
         mask = cv2.imread(train_path + '/' + mask_folder + '/' + name, cv2.IMREAD_GRAYSCALE)
-
-        # TODO resize
-        output_mask = np.zeros((1024, 512, 4))
-        for x, y in np.ndindex(mask.shape):
-            value = mask[x][y]
-            if value == 0:
-                output_mask[x][y][0] = 1
-            elif value == 45:
-                output_mask[x][y][1] = 1
-            elif value == 125:
-                output_mask[x][y][2] = 1
-            elif value == 205:
-                output_mask[x][y][3] = 1
-            else:
-                raise Exception
+        mask = resize_image(mask, shape)
+        mask = convert_pixel_mask_to_multiclass_matirx_mask(mask, mask_pixel_values_aka_classes)
         images.append(image)
-        masks.append(output_mask)
+        masks.append(mask)
 
     return np.array(images), np.array(masks)
 
 
-def load_and_preprocess_test_images(test_path):
-    print("\n# loading and preprocessing test images")
-    images = []
-    for test_image_name in os.listdir(test_path):
-        image = cv2.imread(test_path + '/' + test_image_name, cv2.IMREAD_GRAYSCALE).reshape((1024, 512, 1))
-        images.append(image)
-
-    return np.array(images)
-
-
-def convert_masks_to_gray_images_and_save(predicted_path, result_masks):
-    print("\n# converting result masks to gray images and saving")
+def convert_multiclass_matirx_masks_to_pixel_masks_and_save(predicted_path, result_masks, mask_pixel_values_aka_classes):
+    print("\n# converting multiclass matirx masks to pixel masks and saving")
     for i, item in enumerate(result_masks):
-        output = np.zeros((1024, 512))
-        for x in range(0, item.shape[0]):
-            for y in range(0, item.shape[1]):
-                value = np.argmax(item[x][y])
-                if value == 0:
-                    output[x][y] = 0
-                elif value == 1:
-                    output[x][y] = 45
-                elif value == 2:
-                    output[x][y] = 125
-                elif value == 3:
-                    output[x][y] = 205
-                else:
-                    raise Exception
+        output = convert_multiclass_matirx_mask_to_pixel_mask(item, mask_pixel_values_aka_classes)
         cv2.imwrite(predicted_path + str(i) + '_mask.png', output)
 
 
-def convert_results_to_gray_images(result_masks):
-    print("\n# converting result masks to gray images")
-    converted = []
-    for i, item in enumerate(result_masks):
-        update_progress((i / len(result_masks)) * 100)
-        output = np.zeros((1024, 512))
-        for x in range(0, item.shape[0]):
-            for y in range(0, item.shape[1]):
-                value = np.argmax(item[x][y])
-                if value == 0:
-                    output[x][y] = 0
-                elif value == 1:
-                    output[x][y] = 45
-                elif value == 2:
-                    output[x][y] = 125
-                elif value == 3:
-                    output[x][y] = 205
-                else:
-                    raise Exception
-        converted.append(output)
-    return converted
-
-
-def convert_images_to_gray_images_and_save(save_path, images):
-    print("\n# converting images to gray images and saving")
+def convert_one_class_images_to_pixel_images_and_save(save_path, images, shape=(512, 256)):
+    print("\n# converting one class images to pixel images and saving")
     for i, image in enumerate(images):
-        grayscale_image = image.reshape((1024, 512))
+        grayscale_image = image.reshape((shape[0], shape[1]))
         cv2.imwrite(save_path + str(i) + '_image.png', grayscale_image)
+
+
+def convert_pixel_mask_to_multiclass_matirx_mask(pixel_mask, mask_pixel_values_aka_classes):
+    multiclass_matirx_mask = np.zeros((pixel_mask.shape[0],
+                                       pixel_mask.shape[1],
+                                       len(mask_pixel_values_aka_classes)))
+    for x, y in np.ndindex(pixel_mask.shape):
+        value = pixel_mask[x][y]
+        index = mask_pixel_values_aka_classes.index(value)
+        multiclass_matirx_mask[x][y][index] = 1
+    return multiclass_matirx_mask
+
+
+def convert_multiclass_matirx_mask_to_pixel_mask(multiclass_matirx_mask, mask_pixel_values_aka_classes):
+    pixel_mask = np.zeros((multiclass_matirx_mask.shape[0],
+                           multiclass_matirx_mask.shape[1]))
+    for x, y in np.ndindex(multiclass_matirx_mask.shape[:2]):
+        index = np.argmax(multiclass_matirx_mask[x][y])
+        pixel_mask[x][y] = mask_pixel_values_aka_classes[index]
+    return pixel_mask
+
+
+def resize_image(image, output_shape):
+    return cv2.resize(image, (output_shape[1], output_shape[0]), interpolation=cv2.INTER_NEAREST)
 
 
 def make_file_and_write(file_path, text):
@@ -177,10 +134,6 @@ def make_file_and_write(file_path, text):
 
 def update_progress(progress_percentage):
     print('\r# {0}%'.format(round(progress_percentage, 2)), end='')
-
-
-import matplotlib.pyplot as plt
-import numpy as np
 
 
 def show_images(images, cols=1, titles=None):
@@ -195,6 +148,9 @@ def show_images(images, cols=1, titles=None):
 
     titles: List of titles corresponding to each image. Must have
             the same length as titles.
+            :param titles:
+            :param images:
+            :param cols:
     """
     assert ((titles is None) or (len(images) == len(titles)))
     n_images = len(images)
