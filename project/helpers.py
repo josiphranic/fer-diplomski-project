@@ -108,7 +108,10 @@ def convert_pixel_mask_to_multiclass_matirx_mask(pixel_mask, mask_pixel_values_a
                                        len(mask_pixel_values_aka_classes)))
     for x, y in np.ndindex(pixel_mask.shape):
         value = pixel_mask[x][y]
-        index = mask_pixel_values_aka_classes.index(value)
+        if value in mask_pixel_values_aka_classes:
+            index = mask_pixel_values_aka_classes.index(value)
+        else:
+            index = np.abs(mask_pixel_values_aka_classes - value).argmin()
         multiclass_matirx_mask[x][y][index] = 1
     return multiclass_matirx_mask
 
