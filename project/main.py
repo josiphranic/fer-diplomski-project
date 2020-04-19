@@ -1,7 +1,7 @@
 from custom_2D_unet import *
 from custom_2D_unet_helpers import *
 from helpers import *
-from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
+from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard, EarlyStopping
 from tensorflow.keras.utils import plot_model
 
 dataset_root_dir = '/workspace/datasets/kbc_sm/'
@@ -24,7 +24,8 @@ model.summary()
 results_dir = create_results_dir_results_predict_dir_and_logs_dir(results_root_dir)
 model_checkpoint = ModelCheckpoint(results_dir + 'unet_jaccard.hdf5', monitor='loss', verbose=1, save_best_only=True)
 tensorboard = TensorBoard(results_dir + 'tensorboardlogs/', histogram_freq=1)
-model.fit(train_images, train_masks, batch_size=batch_size, epochs=epochs, callbacks=[model_checkpoint, tensorboard], validation_split=0.15, shuffle=True)
+early_stopping = EarlyStopping(monitor='val_loss', verbose=1, patience=10)
+model.fit(train_images, train_masks, batch_size=batch_size, epochs=epochs, callbacks=[model_checkpoint, tensorboard, early_stopping], validation_split=0.15, shuffle=True)
 
 print('Evaluation:')
 evaluation_loss, evaluation_accuracy = model.evaluate(test_images, test_masks)
