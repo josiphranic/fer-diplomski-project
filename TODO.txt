@@ -1,5 +1,3 @@
--optimize memory when loading data
 -try to normalize input date and see results (possibly depends on BatchNormalization)
 -translation for readme
 -evaluation (and load) for saved models
--refactor evaluate file
