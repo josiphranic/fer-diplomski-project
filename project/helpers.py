@@ -105,7 +105,8 @@ def convert_one_class_images_to_pixel_images_and_save(save_path, images, shape=(
 def convert_pixel_mask_to_multiclass_matirx_mask(pixel_mask, mask_pixel_values_aka_classes):
     multiclass_matirx_mask = np.zeros((pixel_mask.shape[0],
                                        pixel_mask.shape[1],
-                                       len(mask_pixel_values_aka_classes)))
+                                       len(mask_pixel_values_aka_classes)),
+                                      dtype=np.uint8)
     for x, y in np.ndindex(pixel_mask.shape):
         value = pixel_mask[x][y]
         if value in mask_pixel_values_aka_classes:
@@ -118,7 +119,8 @@ def convert_pixel_mask_to_multiclass_matirx_mask(pixel_mask, mask_pixel_values_a
 
 def convert_multiclass_matirx_mask_to_pixel_mask(multiclass_matirx_mask, mask_pixel_values_aka_classes):
     pixel_mask = np.zeros((multiclass_matirx_mask.shape[0],
-                           multiclass_matirx_mask.shape[1]))
+                           multiclass_matirx_mask.shape[1]),
+                          dtype=np.uint8)
     for x, y in np.ndindex(multiclass_matirx_mask.shape[:2]):
         index = np.argmax(multiclass_matirx_mask[x][y])
         pixel_mask[x][y] = mask_pixel_values_aka_classes[index]
