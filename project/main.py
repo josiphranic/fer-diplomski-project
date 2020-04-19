@@ -4,13 +4,13 @@ from helpers import *
 from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard, EarlyStopping
 from tensorflow.keras.utils import plot_model
 
-dataset_root_dir = '/workspace/datasets/kbc_sm/'
-results_root_dir = '/workspace/results/kbc_sm/'
+dataset_root_dir = '/workspace/datasets/sfu/'
+results_root_dir = '/workspace/results/sfu/'
 input_shape = (512, 256, 1)
-mask_pixel_values_aka_classes = [0, 45, 125, 205]
+mask_pixel_values_aka_classes = [0, 64, 80, 100, 120, 192, 255]
 number_of_classes = len(mask_pixel_values_aka_classes)
-batch_size = 3
-epochs = 40
+batch_size = 20
+epochs = 100
 description = 'epochs:' + str(epochs) + ' input shape:' + str(input_shape) + ' number of classes:' + str(number_of_classes) + ' batch size:' + str(batch_size)
 description += ''
 
