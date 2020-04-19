@@ -3,6 +3,7 @@ import os
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
+from multiprocessing import Pool
 
 
 def create_results_dir_results_predict_dir_and_logs_dir(root_dir):
@@ -72,20 +73,23 @@ def load_and_preprocess_train_images_and_masks(train_path, image_folder, mask_fo
     if len(train_image_paths) != len(train_mask_paths):
         raise Exception
 
-    images = []
-    masks = []
-    for i, name in enumerate(train_image_paths):
-        update_progress(((i+1) / len(train_image_paths)) * 100)
-        image = cv2.imread(train_path + '/' + image_folder + '/' + name, cv2.IMREAD_GRAYSCALE)
-        image = resize_image(image, shape)
-        image = image.reshape((shape[0], shape[1], 1))
-        mask = cv2.imread(train_path + '/' + mask_folder + '/' + name, cv2.IMREAD_GRAYSCALE)
-        mask = resize_image(mask, shape)
-        mask = convert_pixel_mask_to_multiclass_matirx_mask(mask, mask_pixel_values_aka_classes)
-        images.append(image)
-        masks.append(mask)
+    image_and_mask_preprocess_data = [(name, train_path, image_folder, mask_folder, shape, mask_pixel_values_aka_classes) for name in train_image_paths]
 
-    return np.array(images), np.array(masks)
+    pool = Pool(processes=4)
+    images_and_masks = pool.map(load_and_preprocess_image_and_mask, image_and_mask_preprocess_data)
+
+    return np.array([image_and_mask[0] for image_and_mask in images_and_masks]), np.array([image_and_mask[1] for image_and_mask in images_and_masks])
+
+
+def load_and_preprocess_image_and_mask(image_and_mask_preprocess_data):
+    name, train_path, image_folder, mask_folder, shape, mask_pixel_values_aka_classes = image_and_mask_preprocess_data
+    image = cv2.imread(train_path + '/' + image_folder + '/' + name, cv2.IMREAD_GRAYSCALE)
+    image = resize_image(image, shape)
+    image = image.reshape((shape[0], shape[1], 1))
+    mask = cv2.imread(train_path + '/' + mask_folder + '/' + name, cv2.IMREAD_GRAYSCALE)
+    mask = resize_image(mask, shape)
+    mask = convert_pixel_mask_to_multiclass_matirx_mask(mask, mask_pixel_values_aka_classes)
+    return image, mask
 
 
 def convert_multiclass_matirx_masks_to_pixel_masks_and_save(predicted_path, result_masks, mask_pixel_values_aka_classes):
