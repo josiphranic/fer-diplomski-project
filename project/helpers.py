@@ -48,19 +48,11 @@ def load_and_preprocess_test_images_and_masks(evaluation_path, image_folder, mas
     if len(evaluation_image_paths) != len(evaluation_mask_paths):
         raise Exception
 
-    images = []
-    masks = []
-    for i, name in enumerate(evaluation_image_paths):
-        update_progress(((i+1) / len(evaluation_image_paths)) * 100)
-        image = cv2.imread(evaluation_path + '/' + image_folder + '/' + name, cv2.IMREAD_GRAYSCALE)
-        image = resize_image(image, shape)
-        image = image.reshape((shape[0], shape[1], 1))
-        mask = cv2.imread(evaluation_path + '/' + mask_folder + '/' + name, cv2.IMREAD_GRAYSCALE)
-        mask = resize_image(mask, shape)
-        mask = convert_pixel_mask_to_multiclass_matirx_mask(mask, mask_pixel_values_aka_classes)
-        images.append(image)
-        masks.append(mask)
-    return np.array(images), np.array(masks)
+    image_and_mask_preprocess_data = [(name, evaluation_path, image_folder, mask_folder, shape, mask_pixel_values_aka_classes) for name in evaluation_image_paths]
+    pool = Pool(processes=3)
+    images_and_masks = pool.map(load_and_preprocess_image_and_mask, image_and_mask_preprocess_data)
+
+    return np.array([image_and_mask[0] for image_and_mask in images_and_masks]), np.array([image_and_mask[1] for image_and_mask in images_and_masks])
 
 
 def load_and_preprocess_train_images_and_masks(train_path, image_folder, mask_folder, mask_pixel_values_aka_classes, count=None, shape=(512, 256)):
@@ -74,19 +66,18 @@ def load_and_preprocess_train_images_and_masks(train_path, image_folder, mask_fo
         raise Exception
 
     image_and_mask_preprocess_data = [(name, train_path, image_folder, mask_folder, shape, mask_pixel_values_aka_classes) for name in train_image_paths]
-
-    pool = Pool(processes=4)
+    pool = Pool(processes=6)
     images_and_masks = pool.map(load_and_preprocess_image_and_mask, image_and_mask_preprocess_data)
 
     return np.array([image_and_mask[0] for image_and_mask in images_and_masks]), np.array([image_and_mask[1] for image_and_mask in images_and_masks])
 
 
 def load_and_preprocess_image_and_mask(image_and_mask_preprocess_data):
-    name, train_path, image_folder, mask_folder, shape, mask_pixel_values_aka_classes = image_and_mask_preprocess_data
-    image = cv2.imread(train_path + '/' + image_folder + '/' + name, cv2.IMREAD_GRAYSCALE)
+    name, folder_path, image_folder, mask_folder, shape, mask_pixel_values_aka_classes = image_and_mask_preprocess_data
+    image = cv2.imread(folder_path + '/' + image_folder + '/' + name, cv2.IMREAD_GRAYSCALE)
     image = resize_image(image, shape)
     image = image.reshape((shape[0], shape[1], 1))
-    mask = cv2.imread(train_path + '/' + mask_folder + '/' + name, cv2.IMREAD_GRAYSCALE)
+    mask = cv2.imread(folder_path + '/' + mask_folder + '/' + name, cv2.IMREAD_GRAYSCALE)
     mask = resize_image(mask, shape)
     mask = convert_pixel_mask_to_multiclass_matirx_mask(mask, mask_pixel_values_aka_classes)
     return image, mask
