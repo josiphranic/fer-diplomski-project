@@ -10,9 +10,10 @@ input_shape = (512, 256, 1)
 mask_pixel_values_aka_classes = [0, 64, 80, 100, 120, 192, 255]
 number_of_classes = len(mask_pixel_values_aka_classes)
 batch_size = 20
-epochs = 100
+epochs = 1000
+early_stopping_patience = 30
 description = 'epochs:' + str(epochs) + ' input shape:' + str(input_shape) + ' number of classes:' + str(number_of_classes) + ' batch size:' + str(batch_size)
-description += ''
+description += ' early stopping patience:' + str(early_stopping_patience)
 
 train_images, train_masks = load_and_preprocess_train_images_and_masks(dataset_root_dir + 'train', 'image', 'label', mask_pixel_values_aka_classes, shape=input_shape)
 test_images, test_masks = load_and_preprocess_test_images_and_masks(dataset_root_dir + 'test', 'image', 'label', mask_pixel_values_aka_classes, shape=input_shape)
@@ -24,7 +25,7 @@ model.summary()
 results_dir = create_results_dir_results_predict_dir_and_logs_dir(results_root_dir)
 model_checkpoint = ModelCheckpoint(results_dir + 'unet_jaccard.hdf5', monitor='loss', verbose=1, save_best_only=True)
 tensorboard = TensorBoard(results_dir + 'tensorboardlogs/', histogram_freq=1)
-early_stopping = EarlyStopping(monitor='val_loss', verbose=1, patience=10)
+early_stopping = EarlyStopping(monitor='val_loss', verbose=1, patience=early_stopping_patience)
 model.fit(train_images, train_masks, batch_size=batch_size, epochs=epochs, callbacks=[model_checkpoint, tensorboard, early_stopping], validation_split=0.15, shuffle=True)
 
 print('Evaluation:')
