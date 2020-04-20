@@ -4,7 +4,7 @@ from helpers import *
 from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard, EarlyStopping
 from tensorflow.keras.utils import plot_model
 
-dataset_root_dir = '/workspace/datasets/sfu/'
+dataset_root_dir = '/workspace/datasets/sfu_splited/'
 results_root_dir = '/workspace/results/sfu/'
 input_shape = (512, 256, 1)
 mask_pixel_values_aka_classes = [0, 64, 80, 100, 120, 192, 255]
