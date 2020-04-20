@@ -45,8 +45,10 @@ def load_and_preprocess_test_images_and_masks(evaluation_path, image_folder, mas
     print("\n# loading and preprocessing test images and masks")
     evaluation_image_paths = os.listdir(evaluation_path + '/' + image_folder)
     evaluation_mask_paths = os.listdir(evaluation_path + '/' + mask_folder)
-    if len(evaluation_image_paths) != len(evaluation_mask_paths):
-        raise Exception
+    evaluation_image_paths.sort()
+    evaluation_mask_paths.sort()
+    if evaluation_image_paths != evaluation_mask_paths:
+        raise Exception("Test data invalid")
 
     image_and_mask_preprocess_data = [(name, evaluation_path, image_folder, mask_folder, shape, mask_pixel_values_aka_classes) for name in evaluation_image_paths]
     pool = Pool(processes=3)
@@ -59,11 +61,13 @@ def load_and_preprocess_train_images_and_masks(train_path, image_folder, mask_fo
     print("\n# loading and preprocessing train images and masks")
     train_image_paths = os.listdir(train_path + '/' + image_folder)
     train_mask_paths = os.listdir(train_path + '/' + mask_folder)
+    train_image_paths.sort()
+    train_mask_paths.sort()
     if count is not None:
         train_image_paths = train_image_paths[:count]
         train_mask_paths = train_mask_paths[:count]
-    if len(train_image_paths) != len(train_mask_paths):
-        raise Exception
+    if train_image_paths != train_mask_paths:
+        raise Exception("Train data invalid")
 
     image_and_mask_preprocess_data = [(name, train_path, image_folder, mask_folder, shape, mask_pixel_values_aka_classes) for name in train_image_paths]
     pool = Pool(processes=6)
