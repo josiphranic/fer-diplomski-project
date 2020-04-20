@@ -11,7 +11,7 @@ mask_pixel_values_aka_classes = [0, 64, 80, 100, 120, 192, 255]
 number_of_classes = len(mask_pixel_values_aka_classes)
 batch_size = 3
 epochs = 1000
-early_stopping_patience = 30
+early_stopping_patience = 15
 description = 'epochs:' + str(epochs) + ' input shape:' + str(input_shape) + ' number of classes:' + str(number_of_classes) + ' batch size:' + str(batch_size)
 description += ' early stopping patience:' + str(early_stopping_patience)
 
