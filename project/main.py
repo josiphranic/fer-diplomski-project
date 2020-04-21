@@ -4,7 +4,7 @@ from helpers import *
 from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
 from tensorflow.keras.utils import plot_model
 
-dataset_root_dir = '/workspace/datasets/kbc_sm/'
+dataset_root_dir = '/workspace/datasets/kbc_sm_splited/'
 results_root_dir = '/workspace/results/kbc_sm/'
 input_shape = (512, 256, 1)
 mask_pixel_values_aka_classes = [0, 45, 125, 205]
