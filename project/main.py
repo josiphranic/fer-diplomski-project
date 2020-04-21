@@ -8,6 +8,7 @@ dataset_root_dir = '/workspace/datasets/kbc_sm_splited/'
 results_root_dir = '/workspace/results/kbc_sm/'
 input_shape = (512, 256, 1)
 mask_pixel_values_aka_classes = [0, 45, 125, 205]
+# mask_pixel_values_aka_classes = [0, 64, 80, 100, 120, 192, 255]
 number_of_classes = len(mask_pixel_values_aka_classes)
 batch_size = 3
 epochs = 1000
