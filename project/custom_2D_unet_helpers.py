@@ -8,7 +8,8 @@ def get_custom_model_with_frozen_encoder(model_path, num_classes):
     for layer in model.layers[:int(len(model.layers) / 2) + 1]:
         layer.trainable = False
     output_layer = model.layers[-1]
-    new_output_layer = Conv2D(num_classes, output_layer.kernel_size,
+    new_output_layer = Conv2D(num_classes,
+                              output_layer.kernel_size,
                               activation=output_layer.activation,
                               name=output_layer.name)(output_layer.input)
     return Model(inputs=model.inputs, outputs=[new_output_layer])
