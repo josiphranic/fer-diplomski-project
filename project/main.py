@@ -33,8 +33,7 @@ model.fit(train_images, train_masks, batch_size=batch_size, epochs=epochs, callb
 
 print('Evaluation:')
 evaluation_loss, evaluation_accuracy = model.evaluate(test_images, test_masks)
-make_file_and_write(results_dir + 'predictions/predictions_result.txt',
-                    'evaluation loss:' + str(evaluation_loss) + ' evaluation accuracy:' + str(evaluation_accuracy))
+make_file_and_write(results_dir + 'predictions/predictions_result.txt', 'evaluation loss:' + str(evaluation_loss) + ' evaluation accuracy:' + str(evaluation_accuracy))
 make_file_and_write(results_dir + 'description.txt', description)
 
 predicted_masks = model.predict(test_images, 1, verbose=1)
