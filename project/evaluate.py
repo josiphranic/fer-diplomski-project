@@ -3,9 +3,6 @@ import os
 import cv2
 
 # set results directory generated from server as working directory
-
-# model_path = 'unet_jaccard.hdf5'
-# model = load_model(model_path, custom_objects={'jaccard_distance': jaccard_distance})
 images = []
 masks = []
 results = []
