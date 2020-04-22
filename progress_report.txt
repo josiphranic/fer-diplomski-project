@@ -1,1 +1,13 @@
-21.4. 	Trained models on sfu and kbc datasets. Pretrained unet model on sfu dataset and trained decoder on kbc dataset.
+22.4. 	Trained separate unet models on sfu and kbc datasets.
+
+	Tried to make better results with transfer learning by using model pretrained on sfu dataset.
+	Pretrained model encoder was frozen for training and last layer of model was changed to give
+	desired output number of classes(Conv2D filter number was updated, kernel size remains (1, 1)).
+	Results was worse then model trained only on sfu dataset.
+	
+	Data saved: only kbc dataset: 'models/kbc_sm/results/2020-04-21_18:04:57.706024'
+		    only sfu dataset: 'models/sfu/results/2020-04-21_02:34:32.802993'
+		    pretrained on sfu dataset and fine tuned on kbc: 'models/kbc_sm_pretrained_encoder_sfu/results/2020-04-21_23:12:10.733253'
+
+
+ 
