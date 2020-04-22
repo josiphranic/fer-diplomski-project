@@ -1,0 +1,1 @@
+21.4. 	Trained models on sfu and kbc datasets. Pretrained unet model on sfu dataset and trained decoder on kbc dataset.
