@@ -5,7 +5,8 @@ from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard, EarlyStoppi
 from tensorflow.keras.utils import plot_model
 
 dataset_root_dir = '/workspace/datasets/kbc_sm_splited/'
-results_root_dir = '/workspace/results/kbc_sm/'
+results_root_dir = '/workspace/results/kbc_sm_pretrained_encoder_sfu/'
+pretrained_model_path = '/workspace/results/sfu/results/2020-04-21_02:34:32.802993/unet_jaccard.hdf5'
 input_shape = (512, 256, 1)
 mask_pixel_values_aka_classes = [0, 45, 125, 205]
 # mask_pixel_values_aka_classes = [0, 64, 80, 100, 120, 192, 255]
@@ -14,12 +15,13 @@ batch_size = 3
 epochs = 1000
 early_stopping_patience = 15
 description = 'epochs:' + str(epochs) + ' input shape:' + str(input_shape) + ' number of classes:' + str(number_of_classes) + ' batch size:' + str(batch_size)
-description += ' early stopping patience:' + str(early_stopping_patience)
+description += ' early stopping patience:' + str(early_stopping_patience) + ' pretrained model:' + pretrained_model_path
 
 train_images, train_masks = load_and_preprocess_train_images_and_masks(dataset_root_dir + 'train', 'image', 'label', mask_pixel_values_aka_classes, shape=input_shape)
 test_images, test_masks = load_and_preprocess_test_images_and_masks(dataset_root_dir + 'test', 'image', 'label', mask_pixel_values_aka_classes, shape=input_shape)
 
-model = custom_unet(input_shape, num_classes=number_of_classes, use_batch_norm=True, output_activation='softmax')
+# model = custom_unet(input_shape, num_classes=number_of_classes, use_batch_norm=True, output_activation='softmax')
+model = get_custom_model_with_frozen_encoder(pretrained_model_path, number_of_classes)
 model.compile(optimizer='adam', loss=jaccard_distance, metrics=['accuracy'])
 model.summary()
 
@@ -31,8 +33,7 @@ model.fit(train_images, train_masks, batch_size=batch_size, epochs=epochs, callb
 
 print('Evaluation:')
 evaluation_loss, evaluation_accuracy = model.evaluate(test_images, test_masks)
-make_file_and_write(results_dir + 'predictions/predictions_result.txt',
-                    'evaluation loss:' + str(evaluation_loss) + ' evaluation accuracy:' + str(evaluation_accuracy))
+make_file_and_write(results_dir + 'predictions/predictions_result.txt', 'evaluation loss:' + str(evaluation_loss) + ' evaluation accuracy:' + str(evaluation_accuracy))
 make_file_and_write(results_dir + 'description.txt', description)
 
 predicted_masks = model.predict(test_images, 1, verbose=1)
