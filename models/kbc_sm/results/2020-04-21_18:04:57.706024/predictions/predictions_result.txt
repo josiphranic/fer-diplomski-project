@@ -1,0 +1,1 @@
+evaluation loss:0.024888142872424353 evaluation accuracy:0.9873175

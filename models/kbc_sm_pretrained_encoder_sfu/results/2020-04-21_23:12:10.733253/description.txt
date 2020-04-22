@@ -1,0 +1,1 @@
+epochs:1000 input shape:(512, 256, 1) number of classes:4 batch size:3 early stopping patience:15 pretrained model:/workspace/results/sfu/results/2020-04-21_02:34:32.802993/unet_jaccard.hdf5
