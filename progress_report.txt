@@ -10,4 +10,4 @@
 		    pretrained on sfu dataset and fine tuned on kbc: 'models/kbc_sm_pretrained_encoder_sfu/results/2020-04-21_23:12:10.733253'
 
 
- 
+29.4.	Added Dice coefficient as metric to unet model.

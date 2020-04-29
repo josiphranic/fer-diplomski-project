@@ -1,6 +1,5 @@
 -try to normalize input date and see results (possibly depends on BatchNormalization)
 -translation for readme
 -evaluation (and load) for saved models
--metrics: dice index
 -surface error 'hastfh?!??! distace'
 -transfer learning with imagenet pretrained model
