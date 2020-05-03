@@ -17,8 +17,8 @@ early_stopping_patience = 15
 description = 'epochs:' + str(epochs) + ' input shape:' + str(input_shape) + ' number of classes:' + str(number_of_classes) + ' batch size:' + str(batch_size)
 description += ' early stopping patience:' + str(early_stopping_patience)  # + ' pretrained model:' + pretrained_model_path
 
-train_images, train_masks = load_and_preprocess_train_images_and_masks(dataset_root_dir + 'train', 'image', 'label', mask_pixel_values_aka_classes, shape=input_shape)
-test_images, test_masks = load_and_preprocess_test_images_and_masks(dataset_root_dir + 'test', 'image', 'label', mask_pixel_values_aka_classes, shape=input_shape)
+train_images, train_masks = load_and_preprocess_train_images_and_masks(dataset_root_dir + 'train', 'image', 'label', mask_pixel_values_aka_classes, shape=input_shape, count=10)
+test_images, test_masks = load_and_preprocess_test_images_and_masks(dataset_root_dir + 'test', 'image', 'label', mask_pixel_values_aka_classes, shape=input_shape, count=10)
 
 model = custom_unet(input_shape, num_classes=number_of_classes, use_batch_norm=True, output_activation='softmax')
 # model = get_custom_model_with_frozen_encoder(pretrained_model_path, number_of_classes)
@@ -41,5 +41,8 @@ predicted_masks = model.predict(test_images, 1, verbose=1)
 convert_one_class_images_to_pixel_images_and_save(results_dir + 'predictions/images/', test_images, shape=input_shape)
 convert_multiclass_matirx_masks_to_pixel_masks_and_save(results_dir + 'predictions/masks/', test_masks, mask_pixel_values_aka_classes)
 convert_multiclass_matirx_masks_to_pixel_masks_and_save(results_dir + 'predictions/results/', predicted_masks, mask_pixel_values_aka_classes)
+
+for predicted, mask in zip(predicted_masks, test_masks):
+    print(hausdorff_distance(mask, predicted))
 
 plot_model(model, to_file=results_dir + 'model_architecture.png', show_shapes=True, show_layer_names=True, rankdir='TB')
