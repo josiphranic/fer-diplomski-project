@@ -41,12 +41,15 @@ def create_results_dir_results_predict_dir_and_logs_dir(root_dir):
     return results_dir + '/'
 
 
-def load_and_preprocess_test_images_and_masks(evaluation_path, image_folder, mask_folder, mask_pixel_values_aka_classes, shape=(512, 256)):
+def load_and_preprocess_test_images_and_masks(evaluation_path, image_folder, mask_folder, mask_pixel_values_aka_classes, count=None, shape=(512, 256)):
     print("\n# loading and preprocessing test images and masks")
     evaluation_image_paths = os.listdir(evaluation_path + '/' + image_folder)
     evaluation_mask_paths = os.listdir(evaluation_path + '/' + mask_folder)
     evaluation_image_paths.sort()
     evaluation_mask_paths.sort()
+    if count is not None:
+        evaluation_image_paths = evaluation_image_paths[:count]
+        evaluation_mask_paths = evaluation_mask_paths[:count]
     if evaluation_image_paths != evaluation_mask_paths:
         raise Exception("Test data invalid")
 
