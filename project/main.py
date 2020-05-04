@@ -42,7 +42,7 @@ convert_one_class_images_to_pixel_images_and_save(results_dir + 'predictions/ima
 convert_multiclass_matirx_masks_to_pixel_masks_and_save(results_dir + 'predictions/masks/', test_masks, mask_pixel_values_aka_classes)
 convert_multiclass_matirx_masks_to_pixel_masks_and_save(results_dir + 'predictions/results/', predicted_masks, mask_pixel_values_aka_classes)
 
-for predicted, mask in zip(predicted_masks, test_masks):
-    print(hausdorff_distance(mask, predicted))
+# for predicted, mask in zip(predicted_masks, test_masks):
+#     print(hausdorff_distance(mask, predicted))
 
 plot_model(model, to_file=results_dir + 'model_architecture.png', show_shapes=True, show_layer_names=True, rankdir='TB')
