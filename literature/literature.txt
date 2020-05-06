@@ -3,4 +3,4 @@ https://www.udemy.com/course/tensorflow-2/
 https://towardsdatascience.com/understanding-semantic-segmentation-with-unet-6be4f42d4b47
 https://medium.com/@karan_jakhar/100-days-of-code-day-7-84e4918cb72c
 https://stats.stackexchange.com/questions/195006/is-the-dice-coefficient-the-same-as-accuracy
-
+https://arxiv.org/abs/1801.05746
