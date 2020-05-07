@@ -23,7 +23,7 @@ test_images, test_masks = load_and_preprocess_test_images_and_masks(dataset_root
 # model = custom_unet(input_shape, num_classes=number_of_classes, use_batch_norm=True, output_activation='softmax')
 # model = get_custom_model_with_frozen_encoder(pretrained_model_path, number_of_classes)
 model = custom_unet_with_vgg19_encoder(input_shape, num_classes=number_of_classes, use_batch_norm=True, output_activation='softmax')
-model.compile(optimizer='adam', loss=jaccard_distance, metrics=['accuracy', dice_coef])
+model.compile(optimizer='adam', loss=jaccard_loss, metrics=['accuracy', dice_coef])
 model.summary()
 
 results_dir = create_results_dir_results_predict_dir_and_logs_dir(results_root_dir)

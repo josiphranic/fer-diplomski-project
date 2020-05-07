@@ -4,7 +4,7 @@ from tensorflow.keras.layers import Conv2D
 
 
 def get_custom_model_with_frozen_encoder(model_path, num_classes):
-    model = load_model(model_path, custom_objects={'jaccard_distance': jaccard_distance})
+    model = load_model(model_path, custom_objects={'jaccard_loss': jaccard_loss})
     for layer in model.layers[:int(len(model.layers) / 2) + 1]:
         layer.trainable = False
     output_layer = model.layers[-1]
@@ -15,7 +15,7 @@ def get_custom_model_with_frozen_encoder(model_path, num_classes):
     return Model(inputs=model.inputs, outputs=[new_output_layer])
 
 
-def jaccard_distance(y_true, y_pred, smooth=100):
+def jaccard_loss(y_true, y_pred, smooth=100):
     intersection = K.sum(K.abs(y_true * y_pred), axis=-1)
     sum_ = K.sum(K.abs(y_true) + K.abs(y_pred), axis=-1)
     jac = (intersection + smooth) / (sum_ - intersection + smooth)
