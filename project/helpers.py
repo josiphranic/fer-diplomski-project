@@ -82,8 +82,10 @@ def load_and_preprocess_train_images_and_masks(train_path, image_folder, mask_fo
 def load_and_preprocess_image_and_mask(image_and_mask_preprocess_data):
     name, folder_path, image_folder, mask_folder, shape, mask_pixel_values_aka_classes = image_and_mask_preprocess_data
     image = cv2.imread(folder_path + '/' + image_folder + '/' + name, cv2.IMREAD_GRAYSCALE)
+    if shape[2] != 1:
+        image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
     image = resize_image(image, shape)
-    image = image.reshape((shape[0], shape[1], 1))
+    image = image.reshape((shape[0], shape[1], shape[2]))
     mask = cv2.imread(folder_path + '/' + mask_folder + '/' + name, cv2.IMREAD_GRAYSCALE)
     mask = resize_image(mask, shape)
     mask = convert_pixel_mask_to_multiclass_matirx_mask(mask, mask_pixel_values_aka_classes)
@@ -100,7 +102,7 @@ def convert_multiclass_matirx_masks_to_pixel_masks_and_save(predicted_path, resu
 def convert_one_class_images_to_pixel_images_and_save(save_path, images, shape=(512, 256)):
     print("\n# converting one class images to pixel images and saving")
     for i, image in enumerate(images):
-        grayscale_image = image.reshape((shape[0], shape[1]))
+        grayscale_image = image.reshape((shape[0], shape[1], shape[2]))
         cv2.imwrite(save_path + str(i) + '_image.png', grayscale_image)
 
 

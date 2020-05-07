@@ -7,7 +7,7 @@ from tensorflow.keras.utils import plot_model
 dataset_root_dir = '/workspace/datasets/kbc_sm_splited/'
 results_root_dir = '/workspace/results/kbc_sm/'
 pretrained_model_path = '/workspace/results/sfu/results/2020-04-21_02:34:32.802993/unet_jaccard.hdf5'
-input_shape = (512, 256, 1)
+input_shape = (512, 256, 3)
 mask_pixel_values_aka_classes = [0, 45, 125, 205]
 # mask_pixel_values_aka_classes = [0, 64, 80, 100, 120, 192, 255]
 number_of_classes = len(mask_pixel_values_aka_classes)
@@ -20,8 +20,9 @@ description += ' early stopping patience:' + str(early_stopping_patience)  # + '
 train_images, train_masks = load_and_preprocess_train_images_and_masks(dataset_root_dir + 'train', 'image', 'label', mask_pixel_values_aka_classes, shape=input_shape)
 test_images, test_masks = load_and_preprocess_test_images_and_masks(dataset_root_dir + 'test', 'image', 'label', mask_pixel_values_aka_classes, shape=input_shape)
 
-model = custom_unet(input_shape, num_classes=number_of_classes, use_batch_norm=True, output_activation='softmax')
+# model = custom_unet(input_shape, num_classes=number_of_classes, use_batch_norm=True, output_activation='softmax')
 # model = get_custom_model_with_frozen_encoder(pretrained_model_path, number_of_classes)
+model = custom_unet_with_vgg19_encoder(input_shape, num_classes=number_of_classes, use_batch_norm=True, output_activation='softmax')
 model.compile(optimizer='adam', loss=jaccard_distance, metrics=['accuracy', dice_coef])
 model.summary()
 
