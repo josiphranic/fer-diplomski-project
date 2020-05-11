@@ -5,4 +5,4 @@ https://medium.com/@karan_jakhar/100-days-of-code-day-7-84e4918cb72c
 https://stats.stackexchange.com/questions/195006/is-the-dice-coefficient-the-same-as-accuracy
 https://arxiv.org/abs/1801.05746
 https://medium.com/@junma11/loss-functions-for-medical-image-segmentation-a-taxonomy-cefa5292eec0
-
+https://towardsdatascience.com/how-to-use-batch-normalization-with-tensorflow-and-tf-keras-to-train-deep-neural-networks-faster-60ba4d054b73

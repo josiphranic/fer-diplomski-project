@@ -132,6 +132,7 @@ def custom_unet_with_vgg19_encoder(input_shape,
         x = concatenate([x, layer.output])
         filters = layer.filters
         x = conv2d_block_single(inputs=x, filters=filters, use_batch_norm=use_batch_norm, dropout=dropout)
+        x = conv2d_block_single(inputs=x, filters=filters, use_batch_norm=use_batch_norm, dropout=dropout)
 
     output = Conv2D(num_classes, (1, 1), activation=output_activation)(x)
 
