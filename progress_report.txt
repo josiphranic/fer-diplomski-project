@@ -11,3 +11,8 @@
 
 
 29.4.	Added Dice coefficient as metric to unet model.
+
+6.5.	Made new unet with vgg19(without top 3 layers) encoder.
+
+10.5.	Custom generalized dice loss function.
+

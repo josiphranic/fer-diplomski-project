@@ -2,4 +2,5 @@
 -translation for readme
 -evaluation (and load) for saved models
 -surface error 'hastfh?!??! distace'
--transfer learning with imagenet pretrained model
+-experiment with architecture of unet with vgg19 pretreined, maybe add another convolutional layer
+
