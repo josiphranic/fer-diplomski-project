@@ -94,16 +94,22 @@ def load_and_preprocess_image_and_mask(image_and_mask_preprocess_data):
 
 def convert_multiclass_matirx_masks_to_pixel_masks_and_save(predicted_path, result_masks, mask_pixel_values_aka_classes):
     print("\n# converting multiclass matirx masks to pixel masks and saving")
+    results = []
     for i, item in enumerate(result_masks):
         output = convert_multiclass_matirx_mask_to_pixel_mask(item, mask_pixel_values_aka_classes)
         cv2.imwrite(predicted_path + str(i) + '_mask.png', output)
+        results.append(output)
+    return results
 
 
 def convert_one_class_images_to_pixel_images_and_save(save_path, images, shape=(512, 256)):
     print("\n# converting one class images to pixel images and saving")
+    results = []
     for i, image in enumerate(images):
         grayscale_image = image.reshape((shape[0], shape[1], shape[2]))
         cv2.imwrite(save_path + str(i) + '_image.png', grayscale_image)
+        results.append(grayscale_image)
+    return results
 
 
 def convert_pixel_mask_to_multiclass_matirx_mask(pixel_mask, mask_pixel_values_aka_classes):
