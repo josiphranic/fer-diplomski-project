@@ -34,6 +34,4 @@ def custom_generalized_dice_loss(y_true, y_pred):
     weights = [1. / K.sum(y_true[:, :, :, class_index]) for class_index in range(number_of_classes)]
     weights = [weight / K.sum(weights) for weight in weights]
     dice_coefs = [weights[class_index] * dice_coef(y_true[:, :, :, class_index], y_pred[:, :, :, class_index]) for class_index in range(number_of_classes)]
-    outlines = [K.mean((K.ones(K.shape(y_true[:, :, :, class_index])) - y_true[:, :, :, class_index]) * y_pred[:, :, :, class_index]) for class_index in range(number_of_classes)]
-    outlines = [weights[class_index] * outlines[class_index] for class_index in range(number_of_classes)]
-    return 1. - K.sum(dice_coefs) + K.sum(outlines)
+    return 1. - K.sum(dice_coefs)
