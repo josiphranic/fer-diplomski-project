@@ -6,3 +6,4 @@ https://stats.stackexchange.com/questions/195006/is-the-dice-coefficient-the-sam
 https://arxiv.org/abs/1801.05746
 https://medium.com/@junma11/loss-functions-for-medical-image-segmentation-a-taxonomy-cefa5292eec0
 https://towardsdatascience.com/how-to-use-batch-normalization-with-tensorflow-and-tf-keras-to-train-deep-neural-networks-faster-60ba4d054b73
+https://github.com/keras-team/keras-contrib/blob/master/keras_contrib/losses/jaccard.py
