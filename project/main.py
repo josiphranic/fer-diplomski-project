@@ -44,6 +44,7 @@ model.compile(optimizer='adam', loss=loss_function, metrics=['accuracy', dice_co
 model.summary()
 
 results_dir = create_results_dir_results_predict_dir_and_logs_dir(results_root_dir)
+experiment.log_parameter("results_directory", results_dir)
 model_checkpoint = ModelCheckpoint(results_dir + 'unet.hdf5', monitor='loss', verbose=1, save_best_only=True)
 tensorboard = TensorBoard(results_dir + 'tensorboardlogs/', histogram_freq=1)
 early_stopping = EarlyStopping(monitor='val_loss', verbose=1, patience=early_stopping_patience)

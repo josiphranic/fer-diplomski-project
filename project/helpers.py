@@ -54,7 +54,7 @@ def load_and_preprocess_test_images_and_masks(evaluation_path, image_folder, mas
         raise Exception("Test data invalid")
 
     image_and_mask_preprocess_data = [(name, evaluation_path, image_folder, mask_folder, shape, mask_pixel_values_aka_classes) for name in evaluation_image_paths]
-    pool = Pool(processes=6)
+    pool = Pool(processes=10)
     images_and_masks = pool.map(load_and_preprocess_image_and_mask, image_and_mask_preprocess_data)
 
     return np.array([image_and_mask[0] for image_and_mask in images_and_masks]), np.array([image_and_mask[1] for image_and_mask in images_and_masks])
@@ -73,7 +73,7 @@ def load_and_preprocess_train_images_and_masks(train_path, image_folder, mask_fo
         raise Exception("Train data invalid")
 
     image_and_mask_preprocess_data = [(name, train_path, image_folder, mask_folder, shape, mask_pixel_values_aka_classes) for name in train_image_paths]
-    pool = Pool(processes=6)
+    pool = Pool(processes=10)
     images_and_masks = pool.map(load_and_preprocess_image_and_mask, image_and_mask_preprocess_data)
 
     return np.array([image_and_mask[0] for image_and_mask in images_and_masks]), np.array([image_and_mask[1] for image_and_mask in images_and_masks])
