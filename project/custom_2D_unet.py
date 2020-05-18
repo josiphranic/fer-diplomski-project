@@ -98,9 +98,9 @@ def custom_unet(
     return model
 
 
-def get_frozen_pretrained_vgg19_model(input_shape):
+def get_frozen_pretrained_vgg19_model(input_shape, trainable_encoder):
     model = VGG19(include_top=False, input_shape=(input_shape[0], input_shape[1], 3))
-    model.trainable = False
+    model.trainable = trainable_encoder
     return model
 
 
@@ -110,8 +110,9 @@ def custom_unet_with_vgg19_encoder(input_shape,
                                    upsample_mode='deconv',
                                    use_dropout_on_upsampling=False,
                                    dropout=0.3,
-                                   output_activation='sigmoid'):
-    encoder = get_frozen_pretrained_vgg19_model(input_shape)
+                                   output_activation='sigmoid',
+                                   trainable_encoder=False):
+    encoder = get_frozen_pretrained_vgg19_model(input_shape, trainable_encoder)
     if upsample_mode == 'deconv':
         upsample = upsample_conv
     else:

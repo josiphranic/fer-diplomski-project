@@ -7,9 +7,11 @@ from tensorflow.keras.utils import plot_model
 
 dataset_root_dir = '/workspace/datasets/sfu_splited/'
 results_root_dir = '/workspace/results/sfu/'
-name = 'sfu - custom unet'
-# pretrained_model_path = '/workspace/results/sfu/results/2020-04-21_02:34:32.802993/unet_jaccard.hdf5'
-input_shape = (512, 256, 1)
+name = 'trainable encoder (pretrained vgg19), sfu - unet'
+# pretrained_model_path = '/workspace/results/sfu/results/2020-05-18_02:44:31.486451/unet.hdf5'
+pretrained_model_path = '**VGG19'
+trainable_encoder = True
+input_shape = (512, 256, 3)
 # mask_pixel_values_aka_classes = [0, 45, 125, 205]
 mask_pixel_values_aka_classes = [0, 64, 80, 100, 120, 192, 255]
 number_of_classes = len(mask_pixel_values_aka_classes)
@@ -33,13 +35,15 @@ experiment.log_parameter("early_stopping_patience", early_stopping_patience)
 experiment.log_parameter("loss_function", loss_function.__name__)
 experiment.log_parameter("validation_split", validation_split)
 experiment.log_parameter("output_activation", output_activation)
+experiment.log_parameter("trainable_encoder", trainable_encoder)
+experiment.log_parameter("pretrained_model_path", pretrained_model_path)
 
 train_images, train_masks = load_and_preprocess_train_images_and_masks(dataset_root_dir + 'train', 'image', 'label', mask_pixel_values_aka_classes, shape=input_shape)
 test_images, test_masks = load_and_preprocess_test_images_and_masks(dataset_root_dir + 'test', 'image', 'label', mask_pixel_values_aka_classes, shape=input_shape)
 
-model = custom_unet(input_shape, num_classes=number_of_classes, use_batch_norm=True, output_activation=output_activation)
-# model = get_custom_model_with_frozen_encoder(pretrained_model_path, number_of_classes)
-# model = custom_unet_with_vgg19_encoder(input_shape, num_classes=number_of_classes, use_batch_norm=True, output_activation='softmax')
+# model = custom_unet(input_shape, num_classes=number_of_classes, use_batch_norm=True, output_activation=output_activation)
+# model = get_custom_model_with_pretrained_encoder(pretrained_model_path, number_of_classes, trainable_encoder=trainable_encoder)
+model = custom_unet_with_vgg19_encoder(input_shape, num_classes=number_of_classes, use_batch_norm=True, output_activation=output_activation, trainable_encoder=trainable_encoder)
 model.compile(optimizer='adam', loss=loss_function, metrics=['accuracy', dice_coef])
 model.summary()
 

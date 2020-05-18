@@ -3,10 +3,11 @@ from tensorflow.keras.models import load_model, Model
 from tensorflow.keras.layers import Conv2D
 
 
-def get_custom_model_with_frozen_encoder(model_path, num_classes):
-    model = load_model(model_path, custom_objects={'jaccard_loss': jaccard_loss})
+def get_custom_model_with_pretrained_encoder(model_path, num_classes, trainable_encoder):
+    model = load_model(model_path, custom_objects={'jaccard_loss': jaccard_loss,
+                                                   'dice_coef': dice_coef})
     for layer in model.layers[:int(len(model.layers) / 2) + 1]:
-        layer.trainable = False
+        layer.trainable = trainable_encoder
     output_layer = model.layers[-1]
     new_output_layer = Conv2D(num_classes,
                               output_layer.kernel_size,
