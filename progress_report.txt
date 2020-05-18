@@ -16,3 +16,4 @@
 
 10.5.	Custom generalized dice loss function.
 
+17.5.	Comel.ml integration. Trainable encoder option. Using jaccard loss.
