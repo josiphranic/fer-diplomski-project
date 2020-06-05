@@ -7,3 +7,5 @@ https://arxiv.org/abs/1801.05746
 https://medium.com/@junma11/loss-functions-for-medical-image-segmentation-a-taxonomy-cefa5292eec0
 https://towardsdatascience.com/how-to-use-batch-normalization-with-tensorflow-and-tf-keras-to-train-deep-neural-networks-faster-60ba4d054b73
 https://github.com/keras-team/keras-contrib/blob/master/keras_contrib/losses/jaccard.py
+https://ieeexplore.ieee.org/abstract/document/4400905
+http://www.kontaktne-lece.eu/anatomija-oka/mreznica-retina/
