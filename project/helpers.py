@@ -4,6 +4,7 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 from multiprocessing import Pool
+from image_augmentation_helper import *
 
 
 def create_results_dir_results_predict_dir_and_logs_dir(root_dir):
@@ -86,8 +87,15 @@ def load_and_preprocess_image_and_mask(image_and_mask_preprocess_data):
         image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
     image = resize_image(image, shape)
     image = image.reshape((shape[0], shape[1], shape[2]))
+    experiment.log_image(image, name='augmented_original_' + name)
+    augmented_images = get_augmented_images(image)
+    experiment.log_parameter("testtesttest" + name, 'obrobrobr')
+    [experiment.log_image(augmented_image[1], name='augmented_image_' + name + str(augmented_image[0])) for augmented_image in enumerate(augmented_images)]
     mask = cv2.imread(folder_path + '/' + mask_folder + '/' + name, cv2.IMREAD_GRAYSCALE)
     mask = resize_image(mask, shape)
+    mask = mask.reshape((shape[0], shape[1], 1))
+    augmented_masks = get_augmented_images(mask)
+    [experiment.log_image(augmented_mask[1], name='augmented_mask_' + name + str(augmented_mask[0])) for augmented_mask in enumerate(augmented_masks)]
     mask = convert_pixel_mask_to_multiclass_matirx_mask(mask, mask_pixel_values_aka_classes)
     return image, mask
 
@@ -117,8 +125,8 @@ def convert_pixel_mask_to_multiclass_matirx_mask(pixel_mask, mask_pixel_values_a
                                        pixel_mask.shape[1],
                                        len(mask_pixel_values_aka_classes)),
                                       dtype=np.uint8)
-    for x, y in np.ndindex(pixel_mask.shape):
-        value = pixel_mask[x][y]
+    for x, y, c in np.ndindex(pixel_mask.shape):
+        value = max(pixel_mask[x][y])
         if value in mask_pixel_values_aka_classes:
             index = mask_pixel_values_aka_classes.index(value)
         else:
