@@ -82,7 +82,7 @@ def load_and_preprocess_train_images_and_masks(train_path, image_folder, mask_fo
     image_and_mask_preprocess_data = [(name, train_path, image_folder, mask_folder, shape, mask_pixel_values_aka_classes, True) for name in train_image_paths]
     pool = Pool(processes=10)
     images_masks_augmentation_and_name = pool.map(load_and_preprocess_image_and_mask, image_and_mask_preprocess_data)
-    log_augmented_images(images_masks_augmentation_and_name)
+    # log_augmented_images(images_masks_augmentation_and_name)
 
     return np.array([y for x in [image_and_mask[0] for image_and_mask in images_masks_augmentation_and_name] for y in x]), \
            np.array([y for x in [image_and_mask[1] for image_and_mask in images_masks_augmentation_and_name] for y in x])
@@ -116,9 +116,9 @@ def load_and_preprocess_image_and_mask(image_and_mask_preprocess_data):
 
 
 def log_augmented_images(images_masks_augmentation_and_name):
+    import time
     for image, mask, augmentation, name, np_mask, np_image in images_masks_augmentation_and_name:
-        if name != '0.png' or True:
-            return
+        time.sleep(0.08)
         augmentation_images, augmentation_masks = augmentation
         experiment.log_image(np_image, name='augmented_' + name.replace('.png', '') + '_original_image')
         experiment.log_image(np_mask, name='augmented_' + name.replace('.png', '') + '_original_mask')
