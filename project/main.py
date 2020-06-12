@@ -93,6 +93,7 @@ def load_and_preprocess_image_and_mask(image_and_mask_preprocess_data):
     image = cv2.imread(folder_path + '/' + image_folder + '/' + name, cv2.IMREAD_GRAYSCALE)
     if shape[2] != 1:
         image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
+    image = image / 255.
     image = resize_image(image, shape)
     image = image.reshape((shape[0], shape[1], shape[2]))
     np_image = np.copy(image)
@@ -140,6 +141,7 @@ def convert_one_class_images_to_pixel_images_and_save(save_path, images, shape=(
     print("\n# converting one class images to pixel images and saving")
     results = []
     for i, image in enumerate(images):
+        image = np.rint(image * 255)
         grayscale_image = image.reshape((shape[0], shape[1], shape[2]))
         cv2.imwrite(save_path + str(i) + '_image.png', grayscale_image)
         results.append(grayscale_image)
