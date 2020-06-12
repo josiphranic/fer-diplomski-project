@@ -2,35 +2,21 @@ import cv2
 
 
 def get_augmented_images(img):
-    images = [horizontal_shift(img, ratio=0.3),
-              horizontal_shift(img, ratio=0.1),
-              horizontal_shift(img, ratio=0.2),
-              vertical_shift(img, ratio=0.3),
-              vertical_shift(img, ratio=0.1),
-              vertical_shift(img, ratio=0.2),
-              horizontal_shift(img, ratio=-0.3),
-              horizontal_shift(img, ratio=-0.1),
-              horizontal_shift(img, ratio=-0.2),
-              vertical_shift(img, ratio=-0.3),
-              vertical_shift(img, ratio=-0.1),
-              vertical_shift(img, ratio=-0.2),
+    images = [horizontal_shift(img, ratio=0.25),
+              vertical_shift(img, ratio=0.25),
+              horizontal_shift(img, ratio=-0.25),
+              vertical_shift(img, ratio=-0.25),
               zoom(img),
-              # vertical_shift(horizontal_shift(img, ratio=0.2), ratio=-0.2),
-              # vertical_shift(horizontal_shift(img, ratio=-0.2), ratio=0.2),
-              # vertical_shift(horizontal_shift(img, ratio=-0.2), ratio=-0.2),
-              # vertical_shift(horizontal_shift(img, ratio=0.2), ratio=0.2),
-              horizontal_flip(vertical_shift(img, ratio=-0.2)),
-              horizontal_flip(horizontal_shift(img, ratio=-0.2)),
-              horizontal_flip(vertical_shift(img, ratio=0.2)),
-              horizontal_flip(horizontal_shift(img, ratio=0.2)),
+              horizontal_flip(vertical_shift(img, ratio=-0.25)),
+              horizontal_flip(horizontal_shift(img, ratio=-0.25)),
+              horizontal_flip(vertical_shift(img, ratio=0.25)),
+              horizontal_flip(horizontal_shift(img, ratio=0.25)),
               horizontal_flip(zoom(img)),
               horizontal_flip(img),
               horizontal_flip(rotation(img, angle=5)),
               horizontal_flip(rotation(img, angle=-5)),
               rotation(img, angle=5),
-              rotation(img, angle=-5),
-              rotation(img, angle=12),
-              rotation(img, angle=-12)]
+              rotation(img, angle=-5)]
     return images
 
 
