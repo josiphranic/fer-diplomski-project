@@ -117,7 +117,7 @@ def load_and_preprocess_image_and_mask(image_and_mask_preprocess_data):
 
 def log_augmented_images(images_masks_augmentation_and_name):
     for image, mask, augmentation, name, np_mask, np_image in images_masks_augmentation_and_name:
-        if name != '0.png':
+        if name != '0.png' or True:
             return
         augmentation_images, augmentation_masks = augmentation
         experiment.log_image(np_image, name='augmented_' + name.replace('.png', '') + '_original_image')
@@ -230,7 +230,7 @@ mask_pixel_values_aka_classes = [0, 45, 125, 205]
 number_of_classes = len(mask_pixel_values_aka_classes)
 batch_size = 3
 epochs = 1000
-early_stopping_patience = 15
+early_stopping_patience = 3
 loss_function = jaccard_loss
 validation_split = 0.15
 output_activation = 'softmax'
